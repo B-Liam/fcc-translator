@@ -10,6 +10,26 @@ class Translator {
         //Split the words into an array
         let splitString = string.split(" ");
 
+        //need to remove trailling punctuation
+        let finalIndex = splitString[splitString.length -1];
+        let regexPunctuation = /[:;,.?!]$/
+        //This creates the test function
+        let regexTestPunctuation = new RegExp(regexPunctuation);
+        //This calls the test function
+        //And will return true
+        let regexPunctuationResult = regexTestPunctuation.test(finalIndex)
+        console.log("regexPunctuationResult", regexPunctuationResult);
+
+        //If true, remove the final character from  string
+        //And store it in a variable
+        let punctionCharacter = finalIndex[finalIndex.length - 1];
+        console.log('punctionCharacter', punctionCharacter);
+
+        if (regexPunctuationResult == true ) {
+            splitString[splitString.length -1] = splitString[splitString.length -1].slice(0, -1);
+            console.log('splitString with punctuation removed', splitString);
+        }
+
         //A variable to store the translation
         let translatedString = [...splitString];
 
@@ -99,6 +119,47 @@ class Translator {
         //Ensuring there is a space between words
         translatedString = translatedString.join(' ');
 
+        //I need to put back any required punctuation
+        if (regexPunctuationResult == true ) {
+            translatedString += punctionCharacter;
+        }
+
+        //additional check for two word strings
+        let arrayOfKeys = Object.keys(americanOnly);
+        console.log("arrayOfKeys:", arrayOfKeys);
+        console.log("americanOnly", americanOnly[arrayOfKeys[0]])
+
+        //A for loop to go through all the elements in arrayOfKeys
+        for (let i = 0 ; i < arrayOfKeys.length ; i++ ) {
+
+            //only replace if string not surrounded by letters
+            //to left or right
+            let regexLettersLeft = `[a-zA-Z\-]${arrayOfKeys[i]}`;
+            let regexLettersRight = `${arrayOfKeys[i]}[a-zA-Z\-]`;
+
+            //This stores true of fault if letters directly left or right
+            let regexLeftCheck = new RegExp(regexLettersLeft,"ig");
+            let regexRightCheck = new RegExp(regexLettersRight,"ig");
+
+            //The test results
+            let regexLeftTest = regexLeftCheck.test(translatedString);
+            let regexRightTest = regexRightCheck.test(translatedString);
+
+            //Do the replacement if know letter left or right
+            //ie the one is not contained within another word
+            if ( regexLeftTest == false && regexRightTest == false ) {
+
+                //Creates a regular expression for replacement
+                let regexReplace = `${arrayOfKeys[i]}`;
+                var re = new RegExp(regexReplace,"ig");
+
+                //Do the replacing
+                translatedString = translatedString.replace(re, `<span class="highlight">${americanOnly[arrayOfKeys[i]]}</span>`)
+
+            }
+            
+        }
+
         //This checks for whether the string has changed
         //If nothing has changed, it returns 'everything looks good'
         //If something has changed, it returns the translated string
@@ -115,6 +176,26 @@ class Translator {
 
         //Split the words into an array
         let splitString = string.split(" ");
+
+        //need to remove trailling punctuation
+        let finalIndex = splitString[splitString.length -1];
+        let regexPunctuation = /[:;,.?!]$/
+        //This creates the test function
+        let regexTestPunctuation = new RegExp(regexPunctuation);
+        //This calls the test function
+        //And will return true
+        let regexPunctuationResult = regexTestPunctuation.test(finalIndex)
+        console.log("regexPunctuationResult", regexPunctuationResult);
+
+        //If true, remove the final character from  string
+        //And store it in a variable
+        let punctionCharacter = finalIndex[finalIndex.length - 1];
+        console.log('punctionCharacter', punctionCharacter);
+
+        if (regexPunctuationResult == true ) {
+            splitString[splitString.length -1] = splitString[splitString.length -1].slice(0, -1);
+            console.log('splitString with punctuation removed', splitString);
+        }
 
         //A variable to store the translation
         let translatedString = [...splitString];
@@ -215,11 +296,55 @@ class Translator {
             }
         }
 
-
-
         //When all this is done, join translated string back together
         //Ensuring there is a space between words
         translatedString = translatedString.join(' ');
+
+        //I need to put back any required punctuation
+        if (regexPunctuationResult == true ) {
+            translatedString += punctionCharacter;
+        }
+
+        //additional check for two word strings
+        let arrayOfKeys = Object.keys(britishOnly);
+        console.log("arrayOfKeys:", arrayOfKeys);
+        console.log("britishOnly", britishOnly[arrayOfKeys[0]])
+
+        //A for loop to go through all the elements in arrayOfKeys
+        for (let i = 0 ; i < arrayOfKeys.length ; i++ ) {
+
+            //only replace if string not surrounded by letters
+            //to left or right
+            let regexLettersLeft = `[a-zA-Z\-]${arrayOfKeys[i]}`;
+            let regexLettersRight = `${arrayOfKeys[i]}[a-zA-Z\-]`;
+
+            //Creates a regex to use in a test
+            let regexLeftCheck = new RegExp(regexLettersLeft,"ig");
+            let regexRightCheck = new RegExp(regexLettersRight,"ig");
+
+            //The test results
+            let regexLeftTest = regexLeftCheck.test(translatedString);
+            let regexRightTest = regexRightCheck.test(translatedString);
+
+            // console.log("regex left right check is", {
+            //     leftCheck: regexLeftTest,
+            //     rightCheck: regexRightTest
+            // })
+
+            //Do the replacement if know letter left or right
+            //ie the one is not contained within another word
+            if ( regexLeftTest == false && regexRightTest == false ) {
+
+                let regexReplace = `${arrayOfKeys[i]}`;
+                let re = new RegExp(regexReplace,"ig");
+
+                //do the translating
+                translatedString = translatedString.replace(re, `<span class="highlight">${britishOnly[arrayOfKeys[i]]}</span>`)
+
+            }
+
+            
+        }
 
         //This checks for whether the string has changed
         //If nothing has changed, it returns 'everything looks good'
