@@ -12,7 +12,7 @@ module.exports = function (app) {
       let language = req.body.locale
       let string = req.body.text
 
-      console.log({
+      console.log("The request object is:", {
         locale: language,
         text: string
       })
@@ -35,10 +35,11 @@ module.exports = function (app) {
 
 
       //Reject wrong locale
-      if ( language != "american-to-british" || language != "british-to-american" ) {
+      if ( language != "american-to-british" && language != "british-to-american" ) {
         res.json({
           error: 'Invalid value for locale field'
         })
+        return
       }
 
       //Create a shared translate variable
@@ -55,10 +56,21 @@ module.exports = function (app) {
         translate = translator.gbToUS(string);
       }
 
-      res.send({
-        text: string,
-        translation: translate
-      })
+      if ( translate == 'Everything looks good to me!' ) {
+        res.send({
+          text: string,
+          translation: translate
+        })
+        return
+      } else {
+        res.send({
+          text: string,
+          translation: translate
+        })
+        return
+      }
+
+      
       
     });
 };
